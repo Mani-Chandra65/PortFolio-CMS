@@ -42,15 +42,27 @@ const setupMiddleware = (app) => {
     }
   }));
 
-  // CORS configuration
-  const corsOptions = {
-    origin: process.env.NODE_ENV === 'production' 
-      ? [process.env.CLIENT_URL] 
-      : ['http://localhost:3000', 'http://127.0.0.1:3000'],
+  // CORS configuration (supports multiple origins via ALLOWED_ORIGINS)
+  const parseOrigins = (val) =>
+    (val || '')
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
+
+  const defaultDevOrigins = ['http://localhost:3000', 'http://127.0.0.1:3000'];
+  const allowedOrigins = process.env.NODE_ENV === 'production'
+    ? parseOrigins(process.env.ALLOWED_ORIGINS || process.env.CLIENT_URL)
+    : [...defaultDevOrigins, ...parseOrigins(process.env.ALLOWED_ORIGINS)];
+
+  app.use(cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true); // allow server-to-server and tools
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error('Not allowed by CORS'), false);
+    },
     credentials: true,
     optionsSuccessStatus: 200
-  };
-  app.use(cors(corsOptions));
+  }));
 
   // Rate limiting
   const limiter = rateLimit({

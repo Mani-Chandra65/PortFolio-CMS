@@ -27,6 +27,16 @@ app.use('/api/projects', require('./server/routes/projects'));
 app.use('/api/blogs', require('./server/routes/blogs'));
 app.use('/api/admin', require('./server/routes/admin'));
 
+// Health check
+app.get('/api/health', (req, res) => {
+  res.json({
+    ok: true,
+    env: process.env.NODE_ENV || 'unknown',
+    mongo: !!process.env.MONGODB_URI,
+    cloudinary: !!process.env.CLOUDINARY_CLOUD_NAME,
+  });
+});
+
 // Serve client application for all non-API routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'index.html'));
