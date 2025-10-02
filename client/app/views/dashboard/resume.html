@@ -1,0 +1,427 @@
+<!-- Dashboard with Navigation -->
+<div class="container-fluid mt-4">
+  <div class="row">
+    <!-- Sidebar Navigation -->
+    <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+      <div class="position-sticky pt-3">
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          <span>Dashboard</span>
+        </h6>
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link" href="#!/dashboard/overview">
+              <i class="fas fa-home me-2"></i>Overview
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#!/dashboard/profile">
+              <i class="fas fa-user me-2"></i>Profile
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#!/dashboard/resume">
+              <i class="fas fa-file-pdf me-2"></i>Resume
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#!/dashboard/projects">
+              <i class="fas fa-folder-open me-2"></i>Projects
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#!/dashboard/blogs">
+              <i class="fas fa-blog me-2"></i>Blog Posts
+            </a>
+          </li>
+        </ul>
+
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          <span>Quick Actions</span>
+        </h6>
+        <ul class="nav flex-column mb-2">
+          <li class="nav-item">
+            <a class="nav-link" href="#!/dashboard/projects/new">
+              <i class="fas fa-plus me-2"></i>New Project
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#!/dashboard/blogs/new">
+              <i class="fas fa-plus me-2"></i>New Blog Post
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#!/portfolio/{{user.username}}" target="_blank">
+              <i class="fas fa-external-link-alt me-2"></i>View Portfolio
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <!-- Page Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">
+          <i class="fas fa-file-pdf me-2"></i>Resume Management
+        </h2>
+        <div ng-if="resume">
+          <a href="{{resume.originalUrl}}" target="_blank" class="btn btn-outline-primary me-2">
+            <i class="fas fa-download me-1"></i>Download PDF
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resume Status Card -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+              <div ng-if="resume" class="d-flex align-items-center">
+                <div class="resume-status-icon me-3">
+                  <i class="fas fa-check-circle fa-2x text-success"></i>
+                </div>
+                <div>
+                  <h5 class="mb-1">Resume Active</h5>
+                  <p class="mb-0 text-muted">
+                    Last updated: {{resume.updatedAt | date:'MMM dd, yyyy h:mm a'}}
+                  </p>
+                  <small class="text-muted">
+                    Original filename: {{resume.originalName}}
+                  </small>
+                </div>
+              </div>
+              <div ng-if="!resume" class="d-flex align-items-center">
+                <div class="resume-status-icon me-3">
+                  <i class="fas fa-exclamation-triangle fa-2x text-warning"></i>
+                </div>
+                <div>
+                  <h5 class="mb-1">No Resume Uploaded</h5>
+                  <p class="mb-0 text-muted">
+                    Upload your resume to showcase your experience and skills.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 text-md-end">
+              <button class="btn btn-primary" ng-click="triggerFileUpload()">
+                <i class="fas fa-{{resume ? 'sync-alt' : 'upload'}} me-1"></i>
+                {{resume ? 'Update Resume' : 'Upload Resume'}}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload Section -->
+  <div class="row mb-4" ng-if="!resume || showUploadForm || selectedFile">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-upload me-2"></i>Upload Resume
+          </h5>
+        </div>
+        <div class="card-body">
+          <!-- File Upload Area -->
+          <div class="upload-area" 
+               ng-class="{'drag-over': dragOver}"
+               ng-drop="handleFileDrop($files)"
+               ng-drop-available="true"
+               ng-drop-disabled="uploading">
+            
+            <div class="text-center p-5">
+              <i class="fas fa-cloud-upload-alt fa-4x text-muted mb-3"></i>
+              <h4 class="mb-3">Drop your resume here or click to browse</h4>
+              <p class="text-muted mb-3">
+                Supported format: PDF files only (Max size: 10MB)
+              </p>
+              
+              <input type="file" 
+                     id="resumeFile" 
+                     accept=".pdf" 
+                     class="d-none"
+                     file-upload>
+              
+              <button class="btn btn-outline-primary btn-lg" 
+                      ng-click="triggerFileInput()"
+                      ng-disabled="uploading">
+                <i class="fas fa-folder-open me-2"></i>Browse Files
+              </button>
+              
+              <div class="mt-3" ng-if="selectedFile">
+                <div class="alert alert-info">
+                  <i class="fas fa-file-pdf me-2"></i>
+                  <strong>Selected file:</strong> {{selectedFile.name}} 
+                  <span class="text-muted">({{formatFileSize(selectedFile.size)}})</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upload Progress -->
+          <div ng-if="uploading" class="mt-3">
+            <div class="progress mb-2">
+              <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                   role="progressbar" 
+                   ng-style="{'width': (uploadProgress || 0) + '%'}">
+                {{uploadProgress || 0}}%
+              </div>
+            </div>
+            <div class="text-center">
+              <small class="text-muted">Uploading and processing your resume...</small>
+            </div>
+          </div>
+
+          <!-- Upload Actions -->
+          <div class="d-flex justify-content-end gap-2 mt-3" ng-if="selectedFile && !uploading">
+            <button class="btn btn-secondary" ng-click="cancelUpload()">
+              Cancel
+            </button>
+            <button class="btn btn-primary" ng-click="uploadResume()" ng-disabled="!selectedFile">
+              <i class="fas fa-upload me-1"></i>Upload Resume
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resume Preview -->
+  <div class="row" ng-if="resume">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">
+            <i class="fas fa-eye me-2"></i>Resume Preview
+          </h5>
+          <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-outline-secondary" ng-click="refreshPreview()">
+              <i class="fas fa-sync-alt me-1"></i>Refresh
+            </button>
+            <button class="btn btn-sm btn-outline-danger" ng-click="deleteResume()">
+              <i class="fas fa-trash me-1"></i>Delete
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <!-- Resume Images Grid -->
+          <div ng-if="resume.images && resume.images.length > 0" class="resume-preview">
+            <div class="row">
+              <div class="col-lg-6 col-md-8 mb-3" ng-repeat="image in resume.images">
+                <div class="resume-page">
+                  <img ng-src="{{image}}" 
+                       class="img-fluid rounded shadow-sm"
+                       alt="Resume page {{$index + 1}}"
+                       loading="lazy">
+                  <div class="page-number">
+                    Page {{$index + 1}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Processing State -->
+          <div ng-if="resume && (!resume.images || resume.images.length === 0)" class="text-center py-5">
+            <div class="spinner-border text-primary mb-3" role="status">
+              <span class="visually-hidden">Processing...</span>
+            </div>
+            <h5>Processing Resume</h5>
+            <p class="text-muted">Converting your PDF to images for web display...</p>
+            <small class="text-muted">This may take a few moments.</small>
+          </div>
+
+          <!-- Resume Info -->
+          <div ng-if="resume" class="mt-4">
+            <div class="row">
+              <div class="col-md-6">
+                <h6>File Information</h6>
+                <ul class="list-unstyled">
+                  <li><strong>Original Name:</strong> {{resume.originalName}}</li>
+                  <li><strong>File Size:</strong> {{formatFileSize(resume.fileSize)}}</li>
+                  <li><strong>Upload Date:</strong> {{resume.createdAt | date:'MMM dd, yyyy h:mm a'}}</li>
+                  <li><strong>Last Updated:</strong> {{resume.updatedAt | date:'MMM dd, yyyy h:mm a'}}</li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <h6>Display Information</h6>
+                <ul class="list-unstyled">
+                  <li><strong>Total Pages:</strong> {{resume.images ? resume.images.length : 'Processing...'}}</li>
+                  <li><strong>Status:</strong> 
+                    <span class="badge bg-success" ng-if="resume.images && resume.images.length > 0">Ready</span>
+                    <span class="badge bg-warning" ng-if="!resume.images || resume.images.length === 0">Processing</span>
+                  </li>
+                  <li><strong>Public URL:</strong> 
+                    <a href="{{getResumePublicUrl()}}" target="_blank" class="text-decoration-none">
+                      View in Portfolio <i class="fas fa-external-link-alt ms-1"></i>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteResumeModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete Resume</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete your resume?</p>
+        <p class="text-muted small">This action cannot be undone and will remove your resume from your portfolio.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" ng-click="confirmDelete()" ng-disabled="deleting">
+          <i class="fas fa-trash me-1" ng-if="!deleting"></i>
+          <div class="spinner-border spinner-border-sm me-1" role="status" ng-if="deleting">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          {{deleting ? 'Deleting...' : 'Delete Resume'}}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Error Modal -->
+<div class="modal fade" id="uploadErrorModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger">
+          <i class="fas fa-exclamation-circle me-2"></i>Upload Error
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>{{uploadError}}</p>
+        <div class="alert alert-info">
+          <h6>Upload Requirements:</h6>
+          <ul class="mb-0">
+            <li>File format: PDF only</li>
+            <li>Maximum file size: 10MB</li>
+            <li>File should not be corrupted or password protected</li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+.upload-area {
+  border: 2px dashed #dee2e6;
+  border-radius: 0.5rem;
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.upload-area:hover, .upload-area.drag-over {
+  border-color: #0d6efd;
+  background-color: rgba(13, 110, 253, 0.05);
+}
+
+.resume-preview {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.resume-page {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.resume-page img {
+  width: 100%;
+  height: auto;
+  border: 1px solid #dee2e6;
+}
+
+.page-number {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.resume-status-icon {
+  flex-shrink: 0;
+}
+
+.progress {
+  height: 10px;
+}
+
+@media (max-width: 768px) {
+  .resume-preview {
+    max-height: 400px;
+  }
+  
+  .upload-area .fa-4x {
+    font-size: 2.5rem !important;
+  }
+}
+
+.sidebar {
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+.sidebar .nav-link {
+  color: #333;
+  padding: 0.75rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar .nav-link:hover {
+  background-color: #e9ecef;
+  color: #007bff;
+}
+
+.sidebar .nav-link.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.sidebar .nav-link i {
+  width: 16px;
+  text-align: center;
+}
+
+.sidebar-heading {
+  font-size: .75rem;
+  text-transform: uppercase;
+}
+</style>
+
+    </div> <!-- End Main Content Area -->
+  </div> <!-- End Row -->
+</div> <!-- End Container -->

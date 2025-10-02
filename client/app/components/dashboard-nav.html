@@ -1,0 +1,104 @@
+<!-- Dashboard Navigation Sidebar -->
+<div class="row">
+  <!-- Sidebar Navigation -->
+  <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+    <div class="position-sticky pt-3">
+      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <span>Dashboard</span>
+      </h6>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link" ng-class="{'active': isActive('/dashboard') || isActive('/dashboard/overview')}" 
+             href="#!/dashboard/overview">
+            <i class="fas fa-home me-2"></i>Overview
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" ng-class="{'active': isActive('/dashboard/profile')}" 
+             href="#!/dashboard/profile">
+            <i class="fas fa-user me-2"></i>Profile
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" ng-class="{'active': isActive('/dashboard/resume')}" 
+             href="#!/dashboard/resume">
+            <i class="fas fa-file-pdf me-2"></i>Resume
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" ng-class="{'active': isActive('/dashboard/projects')}" 
+             href="#!/dashboard/projects">
+            <i class="fas fa-folder-open me-2"></i>Projects
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" ng-class="{'active': isActive('/dashboard/blogs')}" 
+             href="#!/dashboard/blogs">
+            <i class="fas fa-blog me-2"></i>Blog Posts
+          </a>
+        </li>
+      </ul>
+
+      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <span>Quick Actions</span>
+      </h6>
+      <ul class="nav flex-column mb-2">
+        <li class="nav-item">
+          <a class="nav-link" href="#!/dashboard/projects/new">
+            <i class="fas fa-plus me-2"></i>New Project
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#!/dashboard/blogs/new">
+            <i class="fas fa-plus me-2"></i>New Blog Post
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#!/portfolio/{{user.username}}" target="_blank">
+            <i class="fas fa-external-link-alt me-2"></i>View Portfolio
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <!-- Content goes here -->
+    <div ng-transclude></div>
+  </div>
+</div>
+
+<style>
+.sidebar {
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+.sidebar .nav-link {
+  color: #333;
+  padding: 0.75rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar .nav-link:hover {
+  background-color: #e9ecef;
+  color: #007bff;
+}
+
+.sidebar .nav-link.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.sidebar .nav-link i {
+  width: 16px;
+  text-align: center;
+}
+
+.sidebar-heading {
+  font-size: .75rem;
+  text-transform: uppercase;
+}
+</style>

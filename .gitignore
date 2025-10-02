@@ -1,0 +1,71 @@
+# Node & General
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Logs
+logs/
+*.log
+*.pid
+*.pid.lock
+
+# Coverage & reports
+coverage/
+.nyc_output/
+reports/
+
+# Build output / caches
+dist/
+build/
+.cache/
+.tmp/
+.out/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# OS specifics
+.DS_Store
+Thumbs.db
+
+# IDE/editor
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Package managers
+bower_components/
+
+# Sass cache
+.sass-cache/
+*.sass-cache
+
+# Runtime/temp/uploads
+temp/*
+!temp/.gitkeep
+uploads/*
+!uploads/.gitkeep
+public/uploads/*
+!public/uploads/.gitkeep
+server/uploads/*
+!server/uploads/.gitkeep
+
+# Misc
+dump/node_modules/
+.env
+uploads/
+*.log
+.DS_Store
+dist/
+build/
+.vscode/
+*.pdf
+*.tmp

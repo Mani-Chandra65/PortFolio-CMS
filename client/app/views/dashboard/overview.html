@@ -1,0 +1,365 @@
+<!-- Dashboard with Navigation -->
+<div class="container-fluid mt-4">
+  <div class="row">
+    <!-- Sidebar Navigation -->
+    <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+      <div class="position-sticky pt-3">
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          <span>Dashboard</span>
+        </h6>
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" href="#!/dashboard/overview">
+              <i class="fas fa-home me-2"></i>Overview
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#!/dashboard/profile">
+              <i class="fas fa-user me-2"></i>Profile
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#!/dashboard/resume">
+              <i class="fas fa-file-pdf me-2"></i>Resume
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#!/dashboard/projects">
+              <i class="fas fa-folder-open me-2"></i>Projects
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#!/dashboard/blogs">
+              <i class="fas fa-blog me-2"></i>Blog Posts
+            </a>
+          </li>
+        </ul>
+
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          <span>Quick Actions</span>
+        </h6>
+        <ul class="nav flex-column mb-2">
+          <li class="nav-item">
+            <a class="nav-link" href="#!/dashboard/projects/new">
+              <i class="fas fa-plus me-2"></i>New Project
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#!/dashboard/blogs/new">
+              <i class="fas fa-plus me-2"></i>New Blog Post
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#!/portfolio/{{user.username}}" target="_blank">
+              <i class="fas fa-external-link-alt me-2"></i>View Portfolio
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <!-- Dashboard Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">
+          <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+        </h2>
+        <div class="text-muted">
+          Welcome back, <strong>{{user.profile.firstName}} {{user.profile.lastName}}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="row mb-4">
+    <div class="col-md-3 col-sm-6 mb-3">
+      <div class="card bg-primary text-white h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4 class="card-title">{{stats.projects || 0}}</h4>
+              <p class="card-text">Projects</p>
+            </div>
+            <div class="align-self-center">
+              <i class="fas fa-folder-open fa-2x"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-primary border-0">
+          <a href="#!/dashboard/projects" class="text-white text-decoration-none">
+            <small>View Projects <i class="fas fa-arrow-right"></i></small>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 mb-3">
+      <div class="card bg-success text-white h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4 class="card-title">{{stats.blogs || 0}}</h4>
+              <p class="card-text">Blog Posts</p>
+            </div>
+            <div class="align-self-center">
+              <i class="fas fa-blog fa-2x"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-success border-0">
+          <a href="#!/dashboard/blogs" class="text-white text-decoration-none">
+            <small>View Blogs <i class="fas fa-arrow-right"></i></small>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 mb-3">
+      <div class="card bg-info text-white h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4 class="card-title">{{stats.totalViews || 0}}</h4>
+              <p class="card-text">Total Views</p>
+            </div>
+            <div class="align-self-center">
+              <i class="fas fa-eye fa-2x"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-info border-0">
+          <a href="{{portfolioUrl}}" target="_blank" class="text-white text-decoration-none">
+            <small>View Portfolio <i class="fas fa-external-link-alt"></i></small>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 mb-3">
+      <div class="card bg-warning text-white h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4 class="card-title">{{hasResume ? 'Active' : 'Missing'}}</h4>
+              <p class="card-text">Resume Status</p>
+            </div>
+            <div class="align-self-center">
+              <i class="fas fa-file-pdf fa-2x"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-warning border-0">
+          <a href="#!/dashboard/resume" class="text-white text-decoration-none">
+            <small>{{hasResume ? 'Update' : 'Upload'}} Resume <i class="fas fa-arrow-right"></i></small>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="row">
+    <div class="col-lg-8 mb-4">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">
+            <i class="fas fa-clock me-2"></i>Recent Activity
+          </h5>
+          <small class="text-muted">Last 7 days</small>
+        </div>
+        <div class="card-body">
+          <div ng-if="recentActivity.length === 0" class="text-center text-muted py-4">
+            <i class="fas fa-inbox fa-3x mb-3"></i>
+            <p>No recent activity</p>
+            <a href="#!/dashboard/projects/new" class="btn btn-primary btn-sm">Create Your First Project</a>
+          </div>
+          
+          <div ng-if="recentActivity.length > 0" class="timeline">
+            <div ng-repeat="activity in recentActivity | limitTo:5" class="timeline-item">
+              <div class="timeline-marker">
+                <i class="fas fa-{{activity.icon}} text-{{activity.color}}"></i>
+              </div>
+              <div class="timeline-content">
+                <h6 class="mb-1">{{activity.title}}</h6>
+                <p class="mb-1 text-muted">{{activity.description}}</p>
+                <small class="text-muted">{{activity.createdAt | date:'short'}}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-link me-2"></i>Your Portfolio
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="text-center">
+            <div class="mb-3">
+              <div class="portfolio-qr-placeholder bg-light p-4 rounded">
+                <i class="fas fa-qrcode fa-3x text-muted"></i>
+                <p class="mt-2 mb-0 small text-muted">QR Code for Portfolio</p>
+              </div>
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">
+                <i class="fas fa-link"></i>
+              </span>
+              <input type="text" class="form-control" 
+                     value="{{portfolioUrl}}" 
+                     readonly 
+                     ng-click="selectText($event)">
+              <button class="btn btn-outline-primary" type="button" 
+                      ng-click="copyToClipboard(portfolioUrl)">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+            <div class="d-grid gap-2">
+              <a href="{{portfolioUrl}}" target="_blank" class="btn btn-primary btn-sm">
+                <i class="fas fa-external-link-alt me-1"></i>View Portfolio
+              </a>
+              <a href="#!/dashboard/profile" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-edit me-1"></i>Edit Profile
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-bolt me-2"></i>Quick Actions
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3 col-sm-6 mb-3">
+              <a href="#!/dashboard/projects/new" class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3">
+                <i class="fas fa-plus-circle fa-2x mb-2"></i>
+                <span>New Project</span>
+              </a>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+              <a href="#!/dashboard/blogs/new" class="btn btn-outline-success w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3">
+                <i class="fas fa-pen-fancy fa-2x mb-2"></i>
+                <span>Write Blog</span>
+              </a>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+              <a href="#!/dashboard/resume" class="btn btn-outline-info w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3">
+                <i class="fas fa-upload fa-2x mb-2"></i>
+                <span>Upload Resume</span>
+              </a>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+              <a href="#!/dashboard/profile" class="btn btn-outline-warning w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3">
+                <i class="fas fa-user-edit fa-2x mb-2"></i>
+                <span>Edit Profile</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Custom CSS for Timeline -->
+<style>
+.timeline {
+  position: relative;
+  padding-left: 30px;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.timeline-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: -19px;
+  top: 25px;
+  width: 2px;
+  height: calc(100% + 10px);
+  background-color: #e9ecef;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -25px;
+  top: 5px;
+  width: 12px;
+  height: 12px;
+  background-color: white;
+  border: 2px solid #dee2e6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timeline-content {
+  padding-left: 10px;
+}
+
+.portfolio-qr-placeholder {
+  border: 2px dashed #dee2e6;
+  transition: all 0.3s ease;
+}
+
+.portfolio-qr-placeholder:hover {
+  border-color: #adb5bd;
+}
+
+.sidebar {
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+.sidebar .nav-link {
+  color: #333;
+  padding: 0.75rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar .nav-link:hover {
+  background-color: #e9ecef;
+  color: #007bff;
+}
+
+.sidebar .nav-link.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.sidebar .nav-link i {
+  width: 16px;
+  text-align: center;
+}
+
+.sidebar-heading {
+  font-size: .75rem;
+  text-transform: uppercase;
+}
+</style>
+
+    </div> <!-- End Main Content Area -->
+  </div> <!-- End Row -->
+</div> <!-- End Container -->

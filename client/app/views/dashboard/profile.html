@@ -1,0 +1,585 @@
+<!-- Dashboard with Navigation -->
+<div class="container-fluid mt-4">
+  <div class="row">
+    <!-- Sidebar Navigation -->
+    <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+      <div class="position-sticky pt-3">
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          <span>Dashboard</span>
+        </h6>
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link" href="#!/dashboard/overview">
+              <i class="fas fa-home me-2"></i>Overview
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#!/dashboard/profile">
+              <i class="fas fa-user me-2"></i>Profile
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#!/dashboard/resume">
+              <i class="fas fa-file-pdf me-2"></i>Resume
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#!/dashboard/projects">
+              <i class="fas fa-folder-open me-2"></i>Projects
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#!/dashboard/blogs">
+              <i class="fas fa-blog me-2"></i>Blog Posts
+            </a>
+          </li>
+        </ul>
+
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          <span>Quick Actions</span>
+        </h6>
+        <ul class="nav flex-column mb-2">
+          <li class="nav-item">
+            <a class="nav-link" href="#!/dashboard/projects/new">
+              <i class="fas fa-plus me-2"></i>New Project
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#!/dashboard/blogs/new">
+              <i class="fas fa-plus me-2"></i>New Blog Post
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#!/portfolio/{{user.username}}" target="_blank">
+              <i class="fas fa-external-link-alt me-2"></i>View Portfolio
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <!-- Page Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">
+          <i class="fas fa-user-edit me-2"></i>Profile Settings
+        </h2>
+        <div class="text-muted">
+          <small>Manage your personal information and preferences</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <form name="profileForm" ng-submit="updateProfile()" novalidate>
+    <div class="row">
+      <!-- Profile Picture Section -->
+      <div class="col-lg-4 mb-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">
+              <i class="fas fa-camera me-2"></i>Profile Picture
+            </h5>
+          </div>
+          <div class="card-body text-center">
+            <div class="profile-picture-container mb-3">
+        <img ng-src="{{user.profile.profileImage || '/assets/images/default-avatar.png'}}" 
+                   class="profile-picture rounded-circle"
+                   alt="Profile Picture">
+              <div class="profile-picture-overlay">
+                <button type="button" class="btn btn-sm btn-light" ng-click="triggerProfilePictureUpload()">
+                  <i class="fas fa-camera"></i>
+                </button>
+              </div>
+            </div>
+            
+       <input type="file" 
+         id="profilePictureFile" 
+         accept="image/*" 
+         class="d-none"
+         file-change="handleProfilePictureSelect(files)">
+            
+            <div class="d-grid gap-2">
+              <button type="button" class="btn btn-outline-primary btn-sm" 
+                      ng-click="triggerProfilePictureUpload()"
+                      ng-disabled="uploadingProfilePicture">
+                <i class="fas fa-upload me-1" ng-if="!uploadingProfilePicture"></i>
+                <div class="spinner-border spinner-border-sm me-1" role="status" ng-if="uploadingProfilePicture">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                {{uploadingProfilePicture ? 'Uploading...' : 'Change Picture'}}
+              </button>
+              <button type="button" class="btn btn-outline-danger btn-sm" 
+                      ng-click="removeProfilePicture()"
+                      ng-if="user.profile.profilePicture"
+                      ng-disabled="uploadingProfilePicture">
+                <i class="fas fa-trash me-1"></i>Remove
+              </button>
+            </div>
+            
+            <small class="text-muted mt-2 d-block">
+              Recommended: 400x400px, max 2MB
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Information -->
+      <div class="col-lg-8 mb-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">
+              <i class="fas fa-user me-2"></i>Personal Information
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="firstName" class="form-label">First Name *</label>
+                <input type="text" 
+                       class="form-control" 
+                       id="firstName"
+                       name="firstName"
+                       ng-model="user.profile.firstName"
+                       ng-class="{'is-invalid': profileForm.firstName.$invalid && profileForm.firstName.$touched}"
+                       required>
+                <div class="invalid-feedback" ng-show="profileForm.firstName.$invalid && profileForm.firstName.$touched">
+                  First name is required.
+                </div>
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                <label for="lastName" class="form-label">Last Name *</label>
+                <input type="text" 
+                       class="form-control" 
+                       id="lastName"
+                       name="lastName"
+                       ng-model="user.profile.lastName"
+                       ng-class="{'is-invalid': profileForm.lastName.$invalid && profileForm.lastName.$touched}"
+                       required>
+                <div class="invalid-feedback" ng-show="profileForm.lastName.$invalid && profileForm.lastName.$touched">
+                  Last name is required.
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="email" class="form-label">Email Address *</label>
+                <input type="email" 
+                       class="form-control" 
+                       id="email"
+                       name="email"
+                       ng-model="user.email"
+                       ng-class="{'is-invalid': profileForm.email.$invalid && profileForm.email.$touched}"
+                       required>
+                <div class="invalid-feedback" ng-show="profileForm.email.$invalid && profileForm.email.$touched">
+                  <span ng-show="profileForm.email.$error.required">Email is required.</span>
+                  <span ng-show="profileForm.email.$error.email">Please enter a valid email address.</span>
+                </div>
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                <label for="username" class="form-label">Username *</label>
+                <input type="text" 
+                       class="form-control" 
+                       id="username"
+                       name="username"
+                       ng-model="user.username"
+                       ng-class="{'is-invalid': profileForm.username.$invalid && profileForm.username.$touched}"
+                       required>
+                <div class="invalid-feedback" ng-show="profileForm.username.$invalid && profileForm.username.$touched">
+                  Username is required.
+                </div>
+                <small class="form-text text-muted">
+                  Portfolio URL: {{getPortfolioUrl()}}
+                </small>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="title" class="form-label">Professional Title</label>
+              <input type="text" 
+                     class="form-control" 
+                     id="title"
+                     ng-model="user.profile.title"
+                     placeholder="e.g., Full Stack Developer, UI/UX Designer">
+            </div>
+
+            <div class="mb-3">
+              <label for="bio" class="form-label">Bio</label>
+              <textarea class="form-control" 
+                        id="bio"
+                        rows="4"
+                        ng-model="user.profile.bio"
+                        placeholder="Tell us about yourself, your experience, and what you do..."
+                        maxlength="500"></textarea>
+              <small class="form-text text-muted">
+                {{user.profile.bio ? user.profile.bio.length : 0}}/500 characters
+              </small>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="tel" 
+                       class="form-control" 
+                       id="phone"
+                       ng-model="user.profile.phone"
+                       placeholder="+1 (555) 123-4567">
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                <label for="location" class="form-label">Location</label>
+                <input type="text" 
+                       class="form-control" 
+                       id="location"
+                       ng-model="user.profile.location"
+                       placeholder="City, Country">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Social Links Section -->
+    <div class="row">
+      <div class="col-12 mb-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">
+              <i class="fas fa-share-alt me-2"></i>Social Links
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="website" class="form-label">
+                  <i class="fas fa-globe me-1"></i>Website
+                </label>
+                <input type="url" 
+                       class="form-control" 
+                       id="website"
+                       ng-model="user.profile.website"
+                       placeholder="https://yourwebsite.com">
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                <label for="github" class="form-label">
+                  <i class="fab fa-github me-1"></i>GitHub
+                </label>
+                <input type="url" 
+                       class="form-control" 
+                       id="github"
+                       ng-model="user.profile.socialLinks.github"
+                       placeholder="https://github.com/username">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="linkedin" class="form-label">
+                  <i class="fab fa-linkedin me-1"></i>LinkedIn
+                </label>
+                <input type="url" 
+                       class="form-control" 
+                       id="linkedin"
+                       ng-model="user.profile.socialLinks.linkedin"
+                       placeholder="https://linkedin.com/in/username">
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                <label for="twitter" class="form-label">
+                  <i class="fab fa-twitter me-1"></i>Twitter
+                </label>
+                <input type="url" 
+                       class="form-control" 
+                       id="twitter"
+                       ng-model="user.profile.socialLinks.twitter"
+                       placeholder="https://twitter.com/username">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="instagram" class="form-label">
+                  <i class="fab fa-instagram me-1"></i>Instagram
+                </label>
+                <input type="url" 
+                       class="form-control" 
+                       id="instagram"
+                       ng-model="user.profile.socialLinks.instagram"
+                       placeholder="https://instagram.com/username">
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                <label for="behance" class="form-label">
+                  <i class="fab fa-behance me-1"></i>Behance
+                </label>
+                <input type="url" 
+                       class="form-control" 
+                       id="behance"
+                       ng-model="user.profile.socialLinks.behance"
+                       placeholder="https://behance.net/username">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skills Section -->
+    <div class="row">
+      <div class="col-12 mb-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">
+              <i class="fas fa-code me-2"></i>Skills & Technologies
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label for="skillInput" class="form-label">Add Skills</label>
+              <div class="input-group">
+                <input type="text" 
+                       class="form-control" 
+                       id="skillInput"
+                       ng-model="newSkill"
+                       placeholder="Enter a skill and press Enter"
+                       ng-keypress="addSkill($event)">
+                <button class="btn btn-outline-primary" type="button" ng-click="addSkillButton()">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="skills-container" ng-if="user.profile.skills && user.profile.skills.length > 0">
+              <span class="badge bg-primary me-2 mb-2 skill-badge" ng-repeat="skill in user.profile.skills">
+                {{skill}}
+                <button type="button" class="btn-close btn-close-white ms-1" 
+                        ng-click="removeSkill($index)"
+                        aria-label="Remove skill"></button>
+              </span>
+            </div>
+
+            <div ng-if="!user.profile.skills || user.profile.skills.length === 0" class="text-muted">
+              <i class="fas fa-info-circle me-1"></i>
+              No skills added yet. Add your technical skills, programming languages, frameworks, etc.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="text-muted">
+                <i class="fas fa-info-circle me-1"></i>
+                Fields marked with * are required
+              </div>
+              <div class="d-flex gap-2">
+                <button type="button" class="btn btn-outline-secondary" ng-click="resetForm()">
+                  <i class="fas fa-undo me-1"></i>Reset
+                </button>
+                <button type="submit" class="btn btn-primary" ng-disabled="profileForm.$invalid || updating">
+                  <i class="fas fa-save me-1" ng-if="!updating"></i>
+                  <div class="spinner-border spinner-border-sm me-1" role="status" ng-if="updating">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  {{updating ? 'Updating...' : 'Update Profile'}}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- Password Change Section -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-lock me-2"></i>Change Password
+          </h5>
+        </div>
+        <div class="card-body">
+          <form name="passwordForm" ng-submit="changePassword()" novalidate>
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label for="currentPassword" class="form-label">Current Password *</label>
+                <input type="password" 
+                       class="form-control" 
+                       id="currentPassword"
+                       name="currentPassword"
+                       ng-model="passwordData.currentPassword"
+                       ng-class="{'is-invalid': passwordForm.currentPassword.$invalid && passwordForm.currentPassword.$touched}"
+                       required>
+                <div class="invalid-feedback" ng-show="passwordForm.currentPassword.$invalid && passwordForm.currentPassword.$touched">
+                  Current password is required.
+                </div>
+              </div>
+              
+              <div class="col-md-4 mb-3">
+                <label for="newPassword" class="form-label">New Password *</label>
+                <input type="password" 
+                       class="form-control" 
+                       id="newPassword"
+                       name="newPassword"
+                       ng-model="passwordData.newPassword"
+                       ng-class="{'is-invalid': passwordForm.newPassword.$invalid && passwordForm.newPassword.$touched}"
+                       ng-minlength="6"
+                       required>
+                <div class="invalid-feedback" ng-show="passwordForm.newPassword.$invalid && passwordForm.newPassword.$touched">
+                  <span ng-show="passwordForm.newPassword.$error.required">New password is required.</span>
+                  <span ng-show="passwordForm.newPassword.$error.minlength">Password must be at least 6 characters.</span>
+                </div>
+              </div>
+              
+              <div class="col-md-4 mb-3">
+                <label for="confirmPassword" class="form-label">Confirm Password *</label>
+                <input type="password" 
+                       class="form-control" 
+                       id="confirmPassword"
+                       name="confirmPassword"
+                       ng-model="passwordData.confirmPassword"
+                       ng-class="{'is-invalid': (passwordForm.confirmPassword.$invalid && passwordForm.confirmPassword.$touched) || (passwordData.newPassword !== passwordData.confirmPassword && passwordForm.confirmPassword.$touched)}"
+                       required>
+                <div class="invalid-feedback" ng-show="passwordForm.confirmPassword.$invalid && passwordForm.confirmPassword.$touched">
+                  Confirm password is required.
+                </div>
+                <div class="invalid-feedback" ng-show="passwordData.newPassword !== passwordData.confirmPassword && passwordForm.confirmPassword.$touched">
+                  Passwords do not match.
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+              <button type="submit" class="btn btn-warning" 
+                      ng-disabled="passwordForm.$invalid || passwordData.newPassword !== passwordData.confirmPassword || changingPassword">
+                <i class="fas fa-key me-1" ng-if="!changingPassword"></i>
+                <div class="spinner-border spinner-border-sm me-1" role="status" ng-if="changingPassword">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                {{changingPassword ? 'Changing...' : 'Change Password'}}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+.profile-picture-container {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 4px solid #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-picture-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+  padding: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.profile-picture-container:hover .profile-picture-overlay {
+  opacity: 1;
+}
+
+.skill-badge {
+  font-size: 0.9em;
+  padding: 0.5rem 0.75rem;
+  position: relative;
+}
+
+.skill-badge .btn-close {
+  font-size: 0.7em;
+  opacity: 0.7;
+}
+
+.skill-badge .btn-close:hover {
+  opacity: 1;
+}
+
+.skills-container {
+  min-height: 50px;
+  border: 1px dashed #dee2e6;
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+}
+
+.form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.is-invalid {
+  border-color: #dc3545;
+}
+
+.invalid-feedback {
+  font-size: 0.875em;
+}
+
+.sidebar {
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+.sidebar .nav-link {
+  color: #333;
+  padding: 0.75rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar .nav-link:hover {
+  background-color: #e9ecef;
+  color: #007bff;
+}
+
+.sidebar .nav-link.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.sidebar .nav-link i {
+  width: 16px;
+  text-align: center;
+}
+
+.sidebar-heading {
+  font-size: .75rem;
+  text-transform: uppercase;
+}
+</style>
+
+    </div> <!-- End Main Content Area -->
+  </div> <!-- End Row -->
+</div> <!-- End Container -->

@@ -1,0 +1,423 @@
+/* Portfolio CMS Custom Styles */
+
+/* Global Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: var(--theme-bg);
+}
+
+.main-content {
+    margin-top: 76px; /* Account for fixed navbar */
+    min-height: calc(100vh - 76px);
+}
+
+/* Custom Colors */
+:root {
+    /* Maroon/Red theme */
+    --theme-primary: #8B1E3F; /* maroon */
+    --theme-primary-dark: #5C0F25; /* deep maroon */
+    --theme-accent: #E63946; /* coral red accent */
+    --theme-bg: #FFF9F0; /* very light warm yellow */
+    --theme-bg-contrast: #FFF3E0; /* slightly deeper tint for sections */
+    --theme-dark-bg: #2A0E16; /* very dark maroon for dark areas */
+    --theme-light-on-dark: #FBE9EE; /* light text on dark */
+
+    --primary-gradient: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-primary-dark) 100%);
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* Toast Notifications */
+.toast-container .toast {
+    min-width: 300px;
+}
+
+.toast-success {
+    border-left: 4px solid var(--success-color);
+}
+
+.toast-error {
+    border-left: 4px solid var(--danger-color);
+}
+
+.toast-warning {
+    border-left: 4px solid var(--warning-color);
+}
+
+.toast-info {
+    border-left: 4px solid var(--info-color);
+}
+
+/* Buttons */
+.btn-primary {
+    background: var(--primary-gradient);
+    border: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--theme-primary);
+    color: var(--theme-primary);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary-gradient);
+    border-color: transparent;
+    transform: translateY(-2px);
+    color: #fff;
+}
+
+/* Cards */
+.card {
+    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+/* Navbar */
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.navbar-nav .nav-link {
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #fff !important;
+    opacity: 0.8;
+}
+
+/* Forms */
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+}
+
+.form-label {
+    font-weight: 600;
+    color: #495057;
+}
+
+/* File Upload Areas */
+.file-upload-area {
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.file-upload-area:hover,
+.file-upload-area.dragover {
+    border-color: #667eea;
+    background-color: #f8f9ff;
+}
+
+.file-upload-area .upload-icon {
+    font-size: 3rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+}
+
+/* Portfolio Sections */
+.portfolio-header {
+    background: var(--primary-gradient);
+    color: #fff;
+    padding: 4rem 0;
+}
+
+.portfolio-nav {
+    background: var(--theme-bg-contrast);
+    border-bottom: 1px solid #dee2e6;
+    padding: 1rem 0;
+    position: sticky;
+    top: 76px;
+    z-index: 100;
+}
+
+.portfolio-nav .nav-link {
+    color: #495057;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.portfolio-nav .nav-link.active,
+.portfolio-nav .nav-link:hover {
+    background: var(--primary-gradient);
+    color: #fff;
+}
+
+/* Project Cards */
+.project-card {
+    height: 100%;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+}
+
+.project-card .card-img-top {
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.project-card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+.project-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #f8f9fa;
+    color: #495057;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.project-links a:hover {
+    background: var(--primary-gradient);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* Blog Cards */
+.blog-card {
+    height: 100%;
+    transition: all 0.3s ease;
+}
+
+.blog-card:hover {
+    transform: translateY(-3px);
+}
+
+.blog-meta {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.blog-tags .badge {
+    background: #e9ecef;
+    color: #495057;
+    margin-right: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Resume Display */
+.resume-pages {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.resume-page {
+    border: 1px solid #e6d3d8;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.resume-page img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Dashboard Sidebar */
+.dashboard-sidebar {
+    background: #f8f9fa;
+    min-height: calc(100vh - 76px);
+    border-right: 1px solid #dee2e6;
+}
+
+.dashboard-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dashboard-nav li {
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: #495057;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.dashboard-nav a:hover,
+.dashboard-nav a.active {
+    background: var(--primary-gradient);
+    color: white;
+}
+
+/* Statistics Cards */
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stat-label {
+    color: #6c757d;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-content {
+        margin-top: 60px;
+    }
+    
+    .portfolio-header {
+        padding: 2rem 0;
+    }
+    
+    .dashboard-sidebar {
+        position: fixed;
+        top: 76px;
+        left: -250px;
+        width: 250px;
+        z-index: 1000;
+        transition: left 0.3s ease;
+    }
+    
+    .dashboard-sidebar.show {
+        left: 0;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .btn-lg {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .project-card .card-img-top {
+        height: 150px;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+    from { 
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+.slide-in-up {
+    animation: slideInUp 0.6s ease-out;
+}
+
+/* Utility Classes */
+.text-gradient {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.bg-gradient {
+    background: var(--primary-gradient);
+}
+
+.shadow-custom {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.border-gradient {
+    border: 2px solid;
+    border-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%) 1;
+}

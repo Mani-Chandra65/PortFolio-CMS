@@ -1,0 +1,264 @@
+<div class="auth-container">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="auth-card card shadow-lg border-0">
+                    <div class="card-body p-5">
+                        <!-- Header -->
+                        <div class="text-center mb-4">
+                            <i class="fas fa-user-plus fa-3x text-primary mb-3"></i>
+                            <h2 class="fw-bold">Create Account</h2>
+                            <p class="text-muted">Join thousands of professionals</p>
+                        </div>
+
+                        <!-- Register Form -->
+                        <form name="registerForm" ng-submit="register()" novalidate>
+                            <!-- Name Fields -->
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <label for="firstName" class="form-label">First Name</label>
+                                    <input 
+                                        type="text" 
+                                        id="firstName"
+                                        name="firstName"
+                                        class="form-control"
+                                        ng-model="registerData.firstName"
+                                        placeholder="John">
+                                </div>
+                                <div class="col-6">
+                                    <label for="lastName" class="form-label">Last Name</label>
+                                    <input 
+                                        type="text" 
+                                        id="lastName"
+                                        name="lastName"
+                                        class="form-control"
+                                        ng-model="registerData.lastName"
+                                        placeholder="Doe">
+                                </div>
+                            </div>
+
+                            <!-- Username Field -->
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+                                    <input 
+                                        type="text" 
+                                        id="username"
+                                        name="username"
+                                        class="form-control"
+                                        ng-model="registerData.username"
+                                        ng-change="checkUsername()"
+                                        required
+                                        minlength="3"
+                                        maxlength="30"
+                                        pattern="[a-zA-Z0-9_-]+"
+                                        ng-class="{'is-invalid': registerForm.username.$invalid && registerForm.username.$touched, 'is-valid': usernameStatus === 'valid'}"
+                                        placeholder="Choose a username">
+                                    <span class="input-group-text" ng-if="usernameStatus">
+                                        <i class="fas" ng-class="{'fa-check text-success': usernameStatus === 'valid', 'fa-times text-danger': usernameStatus === 'invalid'}"></i>
+                                    </span>
+                                </div>
+                                <div class="invalid-feedback" ng-show="registerForm.username.$invalid && registerForm.username.$touched">
+                                    <span ng-show="registerForm.username.$error.required">Username is required</span>
+                                    <span ng-show="registerForm.username.$error.minlength">Username must be at least 3 characters</span>
+                                    <span ng-show="registerForm.username.$error.pattern">Username can only contain letters, numbers, underscores, and hyphens</span>
+                                </div>
+                                <div class="form-text">
+                                    This will be your portfolio URL: <strong>yoursite.com/portfolio/{{registerData.username || 'username'}}</strong>
+                                </div>
+                            </div>
+
+                            <!-- Email Field -->
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                    <input 
+                                        type="email" 
+                                        id="email"
+                                        name="email"
+                                        class="form-control"
+                                        ng-model="registerData.email"
+                                        required
+                                        ng-class="{'is-invalid': registerForm.email.$invalid && registerForm.email.$touched}"
+                                        placeholder="Enter your email">
+                                </div>
+                                <div class="invalid-feedback" ng-show="registerForm.email.$invalid && registerForm.email.$touched">
+                                    <span ng-show="registerForm.email.$error.required">Email is required</span>
+                                    <span ng-show="registerForm.email.$error.email">Please enter a valid email</span>
+                                </div>
+                            </div>
+
+                            <!-- Password Field -->
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                    <input 
+                                        type="{{showPassword ? 'text' : 'password'}}" 
+                                        id="password"
+                                        name="password"
+                                        class="form-control"
+                                        ng-model="registerData.password"
+                                        required
+                                        minlength="6"
+                                        ng-class="{'is-invalid': registerForm.password.$invalid && registerForm.password.$touched}"
+                                        placeholder="Create a password">
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-outline-secondary"
+                                        ng-click="togglePasswordVisibility()">
+                                        <i class="fas" ng-class="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+                                    </button>
+                                </div>
+                                <div class="invalid-feedback" ng-show="registerForm.password.$invalid && registerForm.password.$touched">
+                                    <span ng-show="registerForm.password.$error.required">Password is required</span>
+                                    <span ng-show="registerForm.password.$error.minlength">Password must be at least 6 characters</span>
+                                </div>
+                            </div>
+
+                            <!-- Confirm Password Field -->
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                    <input 
+                                        type="{{showPassword ? 'text' : 'password'}}" 
+                                        id="confirmPassword"
+                                        name="confirmPassword"
+                                        class="form-control"
+                                        ng-model="registerData.confirmPassword"
+                                        required
+                                        ng-class="{'is-invalid': (registerForm.confirmPassword.$invalid && registerForm.confirmPassword.$touched) || (registerData.password !== registerData.confirmPassword && registerData.confirmPassword)}"
+                                        placeholder="Confirm your password">
+                                </div>
+                                <div class="invalid-feedback" ng-show="(registerForm.confirmPassword.$invalid && registerForm.confirmPassword.$touched) || (registerData.password !== registerData.confirmPassword && registerData.confirmPassword)">
+                                    <span ng-show="registerForm.confirmPassword.$error.required">Please confirm your password</span>
+                                    <span ng-show="registerData.password !== registerData.confirmPassword && registerData.confirmPassword">Passwords do not match</span>
+                                </div>
+                            </div>
+
+                            <!-- Terms & Conditions -->
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="agreeTerms" required>
+                                    <label class="form-check-label" for="agreeTerms">
+                                        I agree to the <a href="#" class="text-decoration-none">Terms of Service</a> 
+                                        and <a href="#" class="text-decoration-none">Privacy Policy</a>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button 
+                                type="submit" 
+                                class="btn btn-primary btn-lg w-100 mb-3"
+                                ng-disabled="registerForm.$invalid || registerLoading || (registerData.password !== registerData.confirmPassword)">
+                                <span ng-if="registerLoading">
+                                    <i class="fas fa-spinner fa-spin me-2"></i>Creating Account...
+                                </span>
+                                <span ng-if="!registerLoading">
+                                    <i class="fas fa-user-plus me-2"></i>Create Account
+                                </span>
+                            </button>
+                        </form>
+
+                        <!-- Divider -->
+                        <div class="text-center my-4">
+                            <div class="divider">
+                                <span class="divider-text bg-white px-3 text-muted">or</span>
+                            </div>
+                        </div>
+
+                        <!-- Login Link -->
+                        <div class="text-center">
+                            <p class="mb-0">Already have an account? 
+                                <a href="#!/login" class="text-decoration-none fw-bold">Sign in here</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.auth-container {
+    min-height: calc(100vh - 140px);
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    display: flex;
+    align-items: center;
+}
+
+.auth-card {
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.input-group-text {
+    background-color: #f8f9fa;
+    border-right: none;
+}
+
+.form-control {
+    border-left: none;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.divider {
+    position: relative;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #dee2e6;
+}
+
+.divider-text {
+    position: relative;
+    z-index: 1;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.form-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+@media (max-width: 576px) {
+    .auth-card .card-body {
+        padding: 2rem !important;
+    }
+}
+</style>
