@@ -1,19 +1,23 @@
 // Demo Data Seeder
+require('dotenv').config();
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const User = require('./server/models/User');
 const Project = require('./server/models/Project');
 const Blog = require('./server/models/Blog');
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/portfolio-cms', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+// Resolve MongoDB URI (Atlas in prod, localhost in dev by default)
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio-cms';
+
+async function connect() {
+  console.log('🔗 Connecting to MongoDB:', MONGODB_URI.startsWith('mongodb+srv://') ? 'mongodb+srv://<masked>@...' : MONGODB_URI);
+  await mongoose.connect(MONGODB_URI);
+}
 
 async function seedDemoData() {
   try {
     console.log('🌱 Seeding demo data...');
+    await connect();
 
     // Check if demo user already exists
     let demoUser = await User.findOne({ username: 'demo-user' });
@@ -66,7 +70,7 @@ async function seedDemoData() {
           description: 'A modern e-commerce platform built with React and Node.js, featuring real-time inventory management, payment processing, and admin dashboard.',
           technologies: ['React', 'Node.js', 'MongoDB', 'Stripe', 'Redux'],
           category: 'web',
-          status: 'completed',
+          status: 'published',
           featured: true,
           liveUrl: 'https://demo-ecommerce.com',
           githubUrl: 'https://github.com/johndoe/ecommerce-platform',
@@ -77,7 +81,7 @@ async function seedDemoData() {
           description: 'A collaborative task management application with real-time updates, team collaboration features, and advanced project tracking.',
           technologies: ['Vue.js', 'Express.js', 'PostgreSQL', 'Socket.io'],
           category: 'web',
-          status: 'completed',
+          status: 'published',
           featured: false,
           liveUrl: 'https://demo-taskmanager.com',
           githubUrl: 'https://github.com/johndoe/task-manager',
@@ -88,7 +92,7 @@ async function seedDemoData() {
           description: 'Cross-platform mobile application providing detailed weather forecasts, interactive maps, and personalized weather alerts.',
           technologies: ['React Native', 'TypeScript', 'Redux', 'Weather API'],
           category: 'mobile',
-          status: 'completed',
+          status: 'published',
           featured: true,
           githubUrl: 'https://github.com/johndoe/weather-app',
           userId: demoUser._id
@@ -145,9 +149,11 @@ async function seedDemoData() {
     console.log('🎉 Demo data seeded successfully!');
     console.log('📄 You can now visit: http://localhost:3000/#!/portfolio/demo-user');
     
+    await mongoose.disconnect();
     process.exit(0);
   } catch (error) {
     console.error('❌ Error seeding demo data:', error);
+    try { await mongoose.disconnect(); } catch {}
     process.exit(1);
   }
 }
