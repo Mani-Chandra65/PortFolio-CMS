@@ -1,10 +1,19 @@
-const pdf = require('pdf-poppler');
 const cloudinary = require('../config/cloudinary');
 const fs = require('fs').promises;
 const path = require('path');
 
+// Determine whether PDF conversion is enabled on this platform/environment
+const pdfConversionEnabled = (process.env.DISABLE_PDF_CONVERSION !== 'true') && (process.platform !== 'linux');
+
 const convertPdfToImages = async (pdfPath, outputDir = './temp') => {
   try {
+    if (!pdfConversionEnabled) {
+      console.warn('PDF to image conversion is disabled on this platform/env. Skipping conversion.');
+      return { imageUrls: [], pageCount: 0 };
+    }
+
+    // Lazy require to avoid module load errors on unsupported platforms
+    const pdf = require('pdf-poppler');
     console.log('PDF conversion starting for:', pdfPath);
     
     // Ensure output directory exists
@@ -21,7 +30,7 @@ const convertPdfToImages = async (pdfPath, outputDir = './temp') => {
 
     // Get PDF info first
     console.log('Getting PDF info...');
-    const pdfInfo = await pdf.info(pdfPath);
+  const pdfInfo = await pdf.info(pdfPath);
     console.log('PDF info retrieved. Pages:', pdfInfo.pages);
     
     // Convert PDF to images

@@ -112,6 +112,8 @@ const uploadResume = async (req, res) => {
       errorMessage = 'PDF processing timeout. Please try with a smaller file.';
     } else if (error.message.includes('pdf-poppler')) {
       errorMessage = 'PDF processing failed. Please ensure the file is a valid PDF.';
+    } else if (error.message.includes('convert PDF to images')) {
+      errorMessage = 'PDF image preview is temporarily unavailable on this server. Your PDF was still uploaded.';
     }
     
     res.status(500).json({ message: errorMessage });
